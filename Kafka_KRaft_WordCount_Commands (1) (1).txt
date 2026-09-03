@@ -1,0 +1,61 @@
+Apache Kafka (KRaft) WordCount Demo - Commands
+
+1. Go to Kafka folder
+
+    cd E:\KAFKA2_MAIN
+
+2. Generate Cluster ID
+
+    bin\windows\kafka-storage.bat random-uuid
+
+3. Set Cluster ID
+
+    set KAFKA_CLUSTER_ID=<PASTE_CLUSTER_ID_HERE>
+
+4. Format Storage
+
+    bin\windows\kafka-storage.bat format -t %KAFKA_CLUSTER_ID% -c config\kraft\server.properties
+
+5. Start Kafka Server
+
+    bin\windows\kafka-server-start.bat config\kraft\server.properties
+
+(Open a NEW Command Prompt)
+
+6. Create Input Topic
+
+    cd E:\KAFKA2_MAIN
+    bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic streams-plaintext-input
+
+7. Create Output Topic
+
+    bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic streams-wordcount-output --config cleanup.policy=compact
+
+8. Verify Topics
+
+    bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --list
+
+(Open another Command Prompt)
+
+9. Run WordCount Demo
+
+    cd E:\KAFKA2_MAIN
+    bin\windows\kafka-run-class.bat org.apache.kafka.streams.examples.wordcount.WordCountDemo
+
+(Open another Command Prompt)
+
+10. Start Producer
+
+    cd E:\KAFKA2_MAIN
+    bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic streams-plaintext-input
+
+Example input: hello kafka hello
+
+(Open another Command Prompt)
+
+11. Start Consumer (shows numeric counts)
+
+    cd E:\KAFKA2_MAIN
+    bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic streams-wordcount-output --from-beginning --formatter kafka.tools.DefaultMessageFormatter --property print.key=true --property key.separator=" : " --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+
+Expected output: hello : 1 kafka : 1 hello : 2
