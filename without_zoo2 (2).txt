@@ -1,0 +1,61 @@
+
+curl -o kafka_2.13-4.0.0.tgz https://dlcdn.apache.org/kafka/4.0.0/kafka_2.13-4.0.0.tgz
+extraction>>tar -xzf kafka_2.13-3.8.0.tgz
+
+bin\windows\kafka-storage.bat random-uuid    (for mac bin\kafka-storage.sh random-uuid)
+
+set KAFKA_CLUSTER_ID=9e2a22c9-4c5d-4f1b-a6a3-2bb5f3b1d123
+
+
+
+
+bin\windows\kafka-storage.bat format -t %KAFKA_CLUSTER_ID% -c config\kraft\server.properties
+
+=-----------------
+>practice  cmwzd0jxRXayFcgmP10dGg
+bin\windows\kafka-storage.bat format -t %tkkwPTuiQPSQglpoe8B0Bw% -c config\kraft\server.properties  (repeat)
+------------------
+bin\windows\kafka-storage.bat format -t %KAFKA_CLUSTER_ID% -c config\kraft\server.properties (repeatition)
+
+
+
+bin\windows\kafka-server-start.bat config/kraft/server.properties
+
+
+
+bin\windows\kafka-topics.bat --create --topic quickstart-events --bootstrap-server localhost:9092
+
+
+
+bin\windows\kafka-console-producer.bat --topic quickstart-events --bootstrap-server localhost:9092
+
+
+
+bin\windows\kafka-console-consumer.bat --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+
+
+
+
+
+
+
+-------------------------------------
+
+
+app
+---------------
+bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic streams-plaintext-input
+Created topic "streams-plaintext-input".
+
+
+$ bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic streams-wordcount-output --config cleanup.policy=compact
+Created topic "streams-wordcount-output".
+
+
+
+bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --describe
+
+
+
+
+bin\windows\kafka-run-class.bat org.apache.kafka.streams.examples.wordcount.WordCountDemo
